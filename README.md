@@ -13,3 +13,34 @@
 | **PyTest Guardian** | ![PyTest Guardian](https://img.shields.io/badge/PyTest_Guardian-Bloqueado-inactive?style=for-the-badge&logo=pytest) | Hito 3: Cobertura > 80% |
 | **AI Auditor** | ![AI Auditor](https://img.shields.io/badge/AI_Auditor-Bloqueado-inactive?style=for-the-badge&logo=openai) | Hito 3: PROMPTS.md & TDD |
 | **Git Flow Master** | ![Git Flow Master](https://img.shields.io/badge/Git_Flow_Master-Bloqueado-inactive?style=for-the-badge&logo=github) | Transversal: Commits Semánticos |
+
+## Hito 1: Persistencia y APIs
+
+TI-Metrics lee registros desde `data/logs.csv` y `data/events.json`, valida los campos, normaliza los valores numéricos, elimina eventos duplicados y calcula métricas HTTP. También consulta una API geográfica para las IPs únicas.
+
+### Requisitos
+
+- Python 3 instalado.
+- Conexión a internet para consultar la geolocalización.
+- Dependencias instaladas desde `requirements.txt`.
+
+### Instalación y ejecución en Windows
+
+Desde la carpeta raíz del proyecto, ejecuta:
+
+```
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python main.py
+```
+
+El programa lee `data/logs.csv` y `data/events.json`. Crea la carpeta `output` si no existe y guarda el reporte en `output/report.json`.
+
+### Métricas y decisiones
+
+- El porcentaje HTTP 500 se calcula sobre los eventos válidos después de eliminar duplicados.
+- Una IP se considera crítica si tiene al menos un evento con estado HTTP 500.
+- Dos registros se consideran duplicados si coinciden en timestamp, IP, método, ruta, estado HTTP, CPU y memoria.
+- Se descartan registros con campos incompletos, IP inválida o valores numéricos fuera de rango.
+- La geolocalización es una estimación asociada a la IP.

@@ -1,0 +1,11 @@
+[
+  {
+    "timestamp": "2026-10-17T08:02:00Z",
+    "ip": "1.1.1.1",
+    "method": "POST",
+    "path": "/api/login",
+    "status": 500,
+    "cpu_percent": 85.0,
+    "memory_percent": 91.2
+  }
+]

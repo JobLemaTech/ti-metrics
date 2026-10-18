@@ -1,0 +1,32 @@
+{
+    "metrics": {
+        "total_events": 2,
+        "http_500_count": 1,
+        "http_500_percentage": 50.0,
+        "critical_ips": [
+            "1.1.1.1"
+        ]
+    },
+    "geolocation": {
+        "1.1.1.1": {
+            "status": "success",
+            "country": "Australia",
+            "countryCode": "AU",
+            "regionName": "Queensland",
+            "city": "South Brisbane",
+            "lat": -27.4766,
+            "lon": 153.0166,
+            "query": "1.1.1.1"
+        },
+        "8.8.8.8": {
+            "status": "success",
+            "country": "Estados Unidos",
+            "countryCode": "US",
+            "regionName": "Virginia",
+            "city": "Ashburn",
+            "lat": 39.03,
+            "lon": -77.5,
+            "query": "8.8.8.8"
+        }
+    }
+}
