@@ -45,6 +45,20 @@ El programa lee `data/logs.csv` y `data/events.json`. Crea la carpeta `output` s
 - Se descartan registros con campos incompletos, IP inválida o valores numéricos fuera de rango.
 - La geolocalización es una estimación asociada a la IP.
 
+### Resultados con los datos de ejemplo
+
+| Indicador | Resultado |
+| :--- | ---: |
+| Eventos del CSV | 8 |
+| Eventos del JSON | 1 |
+| Registros duplicados | 1 |
+| Eventos válidos y únicos analizados | 8 |
+| Errores HTTP 500 | 3 |
+| Porcentaje de errores HTTP 500 | 37,5 % |
+| IP crítica | `1.1.1.1` |
+
+El evento del JSON ya está presente en el CSV, por eso se elimina como duplicado. La geolocalización se consulta para las IPs únicas y puede variar según la respuesta del servicio.
+
 ### Formato de los archivos de entrada
 
 Cada evento debe incluir estos campos:

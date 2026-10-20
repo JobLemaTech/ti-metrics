@@ -98,3 +98,12 @@
 * **Respuesta de la IA:** Sugirió explicar los campos esperados en los eventos, el contenido del reporte, el comportamiento ante fallos de geolocalización y el alcance de esta entrega.
 * **Análisis Crítico:** Debía comprobar que las rutas y el comportamiento descritos coincidieran con el proyecto real. También se aclaró que el README es una guía de uso y documentación, no una interfaz gráfica.
 * **Solución Final Aplicada:** Amplié el README con información para entender los datos de entrada, el reporte JSON y el alcance de esta versión del proyecto.
+
+## Registro de Prompt #12
+
+* **Fecha:** 2026-10-20
+* **Módulo/Función:** `data/logs.csv` y `README.md` — ampliación de datos de ejemplo y documentación de resultados.
+* **Prompt Enviado:** [Reconstruido] “¿Conviene agregar más eventos para explicar mejor el análisis y cómo documento los resultados?”
+* **Respuesta de la IA:** Recomendó agregar eventos variados con estados HTTP `200`, `401`, `404` y `500`, mantener un duplicado entre los archivos y explicar los resultados obtenidos.
+* **Análisis Crítico:** Había que comprobar que los eventos nuevos tuvieran los campos requeridos y valores válidos, conservar el duplicado para demostrar la deduplicación y volver a ejecutar el programa para obtener métricas reales.
+* **Solución Final Aplicada:** Añadí seis eventos al CSV, ejecuté el programa y comprobé que procesara 8 eventos únicos, con 3 errores HTTP 500 (37,5 %) y `1.1.1.1` como IP crítica. Actualicé el README para documentar esos resultados.

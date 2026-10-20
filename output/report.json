@@ -1,8 +1,8 @@
 {
     "metrics": {
-        "total_events": 2,
-        "http_500_count": 1,
-        "http_500_percentage": 50.0,
+        "total_events": 8,
+        "http_500_count": 3,
+        "http_500_percentage": 37.5,
         "critical_ips": [
             "1.1.1.1"
         ]
@@ -27,6 +27,16 @@
             "lat": 39.03,
             "lon": -77.5,
             "query": "8.8.8.8"
+        },
+        "9.9.9.9": {
+            "status": "success",
+            "country": "Estados Unidos de América (los)",
+            "countryCode": "US",
+            "regionName": "California",
+            "city": "Berkeley",
+            "lat": 37.8806,
+            "lon": -122.268,
+            "query": "9.9.9.9"
         }
     }
 }
