@@ -44,3 +44,35 @@ El programa lee `data/logs.csv` y `data/events.json`. Crea la carpeta `output` s
 - Dos registros se consideran duplicados si coinciden en timestamp, IP, método, ruta, estado HTTP, CPU y memoria.
 - Se descartan registros con campos incompletos, IP inválida o valores numéricos fuera de rango.
 - La geolocalización es una estimación asociada a la IP.
+
+### Formato de los archivos de entrada
+
+Cada evento debe incluir estos campos:
+
+- `timestamp`: fecha y hora del evento.
+- `ip`: dirección IP.
+- `method`: método HTTP, por ejemplo, `GET` o `POST`.
+- `path`: ruta solicitada, por ejemplo, `/health`.
+- `status`: estado HTTP, como `200` o `500`.
+- `cpu_percent`: porcentaje de uso de CPU entre 0 y 100.
+- `memory_percent`: porcentaje de uso de memoria entre 0 y 100.
+
+El archivo CSV debe tener una fila de encabezados con esos nombres. El archivo JSON debe contener una lista de eventos, donde cada evento sea un objeto con esos campos. Los registros incompletos o con valores inválidos se excluyen del análisis.
+
+### Reporte generado
+
+El programa crea `output/report.json`. El reporte contiene:
+
+- `total_events`: cantidad de eventos válidos y únicos.
+- `http_500_count`: cantidad de eventos con estado HTTP 500.
+- `http_500_percentage`: porcentaje de errores HTTP 500.
+- `critical_ips`: direcciones IP que tuvieron al menos un error HTTP 500.
+- `geolocation`: información geográfica consultada para cada IP única.
+
+Con los datos de ejemplo, el análisis produce 2 eventos válidos y únicos y 1 error HTTP 500, equivalente al 50 %. Los resultados pueden cambiar si se modifican los archivos de entrada.
+
+La geolocalización depende de una API externa y de una conexión a internet. La ubicación es aproximada; si la consulta falla, el reporte incluye el estado y el mensaje del error.
+
+## Alcance de esta entrega
+
+Esta versión corresponde al Hito 1 de TI-Metrics e incluye la lectura de archivos CSV y JSON, la validación y deduplicación de eventos, el cálculo de métricas, la consulta de geolocalización y la generación del reporte JSON.

@@ -89,3 +89,12 @@
 * **Respuesta de la IA:** Orientó la documentación de requisitos, comandos de ejecución y decisiones de análisis. Después explicó cómo revisar los cambios, crear un commit semántico y subirlos a la rama `main`.
 * **Análisis Crítico:** Se corrigió el formato del bloque de comandos de PowerShell en el README. Antes de publicar, comprobé qué archivos estaban preparados para el commit y que `.venv` no apareciera.
 * **Solución Final Aplicada:** Actualicé el README, registré la asistencia en esta bitácora y publiqué los cambios del Hito 1. Verifiqué que Git indicara la rama sincronizada y el árbol de trabajo limpio.
+
+## Registro de Prompt #11
+
+* **Fecha:** 2026-10-20
+* **Módulo/Función:** `README.md` — documentación de uso y alcance del Hito 1.
+* **Prompt Enviado:** [Reconstruido] “¿Qué información puedo añadir al README para que el usuario entienda qué archivos necesita, qué reporte genera y qué incluye el Hito 1?”
+* **Respuesta de la IA:** Sugirió explicar los campos esperados en los eventos, el contenido del reporte, el comportamiento ante fallos de geolocalización y el alcance de esta entrega.
+* **Análisis Crítico:** Debía comprobar que las rutas y el comportamiento descritos coincidieran con el proyecto real. También se aclaró que el README es una guía de uso y documentación, no una interfaz gráfica.
+* **Solución Final Aplicada:** Amplié el README con información para entender los datos de entrada, el reporte JSON y el alcance de esta versión del proyecto.
