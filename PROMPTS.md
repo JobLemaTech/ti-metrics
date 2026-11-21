@@ -107,3 +107,39 @@
 * **Respuesta de la IA:** Recomendó agregar eventos variados con estados HTTP `200`, `401`, `404` y `500`, mantener un duplicado entre los archivos y explicar los resultados obtenidos.
 * **Análisis Crítico:** Había que comprobar que los eventos nuevos tuvieran los campos requeridos y valores válidos, conservar el duplicado para demostrar la deduplicación y volver a ejecutar el programa para obtener métricas reales.
 * **Solución Final Aplicada:** Añadí seis eventos al CSV, ejecuté el programa y comprobé que procesara 8 eventos únicos, con 3 errores HTTP 500 (37,5 %) y `1.1.1.1` como IP crítica. Actualicé el README para documentar esos resultados.
+
+## Registro de Prompt #13
+
+* **Fecha:** 2026-11-20
+* **Módulo/Función:** `src/parsers/base_parser.py`.
+* **Prompt Enviado:** [Reconstruido] “¿Para qué sirven `__init__`, `self._path` y `@property` en la clase base de los lectores?”
+* **Respuesta de la IA:** Explicó que el constructor recibe la ruta, que `Path(path)` la convierte en un objeto para trabajar con archivos y que `self._path` la guarda en cada lector. También orientó la creación de la propiedad `path`.
+* **Análisis Crítico:** Comprendí que el guion bajo indica uso interno por convención. La propiedad permite consultar la ruta mediante `objeto.path`. Al definir únicamente el getter, la propiedad no permite asignaciones directas como `objeto.path = otra_ruta`, aunque el atributo interno sigue siendo accesible.
+* **Solución Final Aplicada:** Implementé el constructor y la propiedad en `BaseLogParser`. Los lectores hijos heredan ese comportamiento y utilizan `self.path` para abrir sus archivos.
+
+## Registro de Prompt #14
+
+* **Fecha:** 2026-11-20
+* **Módulo/Función:** `src/parsers/json_parser.py`.
+* **Prompt Enviado:** [Reconstruido] “¿Cómo traslado la lectura de JSON a una clase hija y dónde deben ir las validaciones y el retorno?”
+* **Respuesta de la IA:** Orientó la creación de `JSONLogParser`, heredando de `BaseLogParser`, y la implementación de `read()` con `json.load`, manejo de excepciones y comprobaciones de estructura.
+* **Análisis Crítico:** Mi primer método devolvía los eventos inmediatamente después de cargarlos. Había que mover el retorno al final para comprobar primero que el contenido fuera una lista y que todos sus elementos fueran diccionarios.
+* **Solución Final Aplicada:** Coloqué las validaciones después del manejo de errores y el retorno fuera del ciclo. Ejecuté el lector y comprobé que devolviera la lista con el evento de `events.json`.
+
+## Registro de Prompt #15
+
+* **Fecha:** 2026-11-20
+* **Módulo/Función:** `main.py` — integración de lectores y polimorfismo.
+* **Prompt Enviado:** [Reconstruido] “¿Cómo creo los objetos lectores, llamo a sus métodos y reúno sus eventos usando un ciclo?”
+* **Respuesta de la IA:** Explicó cómo instanciar `CSVLogParser` y `JSONLogParser`, guardarlos en una lista y recorrerlos llamando a `parser.read()`. También revisó mis intentos y señaló referencias que quedaban de la implementación anterior.
+* **Análisis Crítico:** Inicialmente intenté llamar a un método inexistente sobre variables que todavía no estaban definidas. Después dejé una asignación que utilizaba `csv_events` y `json_events`, aunque el ciclo ya reunía los datos. También corregí la sintaxis de creación de la lista de lectores.
+* **Solución Final Aplicada:** Creé ambos objetos, los almacené en `parsers` y acumulé sus resultados con `all_events += parser.read()`. Eliminé las importaciones y llamadas antiguas. Ejecuté `python main.py` y comprobé que se generara el reporte con las mismas métricas.
+
+## Registro de Prompt #16
+
+* **Fecha:** 2026-11-20
+* **Módulo/Función:** `src/models/log_event.py`, `src/services/analysis.py` y `main.py`.
+* **Prompt Enviado:** [Reconstruido] “Guíame para representar los eventos mediante una clase e integrarla con el análisis. Revisemos mis intentos y corrige lo que falle.”
+* **Respuesta de la IA:** Explicó el constructor, los atributos internos, las propiedades, la conversión a diccionario y la clave de deduplicación. Revisó mis fragmentos y proporcionó código cuando pedí ayuda.
+* **Análisis Crítico:** Envié mis intentos y corregí la falta de `@property`, su uso innecesario en `to_dict()` y la creación de un diccionario donde se necesitaba una tupla. Al integrar los objetos, también fue necesario sustituir el acceso por claves por propiedades y métodos.
+* **Solución Final Aplicada:** Implementé `LogEvent` y adapté la normalización para devolver objetos válidos. La deduplicación utiliza `deduplication_key()`, las métricas consultan `is_http_500` y las IPs se obtienen mediante la propiedad `ip`. Ejecuté `python main.py` y obtuve 8 eventos únicos, 3 errores HTTP 500 y 37,5 %. Queda pendiente continuar con la clase `LogAnalyzer` y los demás componentes del Hito 2.

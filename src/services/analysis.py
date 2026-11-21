@@ -1,4 +1,6 @@
 from ipaddress import ip_address
+from src.models.log_event import LogEvent
+
 
 REQUIRED_FIELDS = (
     "timestamp",
@@ -30,7 +32,15 @@ def normalize_event(event):
         return None
     if not 0 <= normalized["memory_percent"] <= 100:
         return None
-    return normalized
+    return LogEvent(
+        timestamp=normalized["timestamp"],
+        ip=normalized["ip"],
+        method=normalized["method"],
+        path=normalized["path"],
+        status=normalized["status"],
+        cpu_percent=normalized["cpu_percent"],
+        memory_percent=normalized["memory_percent"],
+    )
 def deduplicate_events(events):
     unique_events = []
     seen_events = set()
@@ -38,15 +48,7 @@ def deduplicate_events(events):
         normalized = normalize_event(event)
         if normalized is None:
             continue
-        event_key = (
-            normalized["timestamp"],
-            normalized["ip"],
-            normalized["method"],
-            normalized["path"],
-            normalized["status"],
-            normalized["cpu_percent"],
-            normalized["memory_percent"],
-        )
+        event_key = normalized.deduplication_key()
         if event_key not in seen_events:
             seen_events.add(event_key)
             unique_events.append(normalized)
@@ -55,7 +57,7 @@ def calculate_metrics(events):
     total_events = len(events)
     errors_500 = []
     for event in events:
-        if event["status"] == 500:
+        if event.is_http_500:
             errors_500.append(event)
     if total_events > 0:
         error_percentage = (len(errors_500) / total_events) * 100
@@ -64,7 +66,7 @@ def calculate_metrics(events):
 
     critical_ips = set()
     for event in errors_500:
-        critical_ips.add(event["ip"])
+        critical_ips.add(event.ip)
     return {
         "total_events": total_events,
         "http_500_count": len(errors_500),
