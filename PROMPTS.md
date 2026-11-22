@@ -143,3 +143,39 @@
 * **Respuesta de la IA:** Explicó el constructor, los atributos internos, las propiedades, la conversión a diccionario y la clave de deduplicación. Revisó mis fragmentos y proporcionó código cuando pedí ayuda.
 * **Análisis Crítico:** Envié mis intentos y corregí la falta de `@property`, su uso innecesario en `to_dict()` y la creación de un diccionario donde se necesitaba una tupla. Al integrar los objetos, también fue necesario sustituir el acceso por claves por propiedades y métodos.
 * **Solución Final Aplicada:** Implementé `LogEvent` y adapté la normalización para devolver objetos válidos. La deduplicación utiliza `deduplication_key()`, las métricas consultan `is_http_500` y las IPs se obtienen mediante la propiedad `ip`. Ejecuté `python main.py` y obtuve 8 eventos únicos, 3 errores HTTP 500 y 37,5 %. Queda pendiente continuar con la clase `LogAnalyzer` y los demás componentes del Hito 2.
+
+## Registro de Prompt #17
+
+* **Fecha:** 2026-11-21
+* **Módulo/Función:** `src/services/analysis.py` y `main.py`.
+* **Prompt Enviado:** [Reconstruido] “Ayúdame a trasladar las funciones de análisis a LogAnalyzer. Quiero intentar el código y que revises mis errores.”
+* **Respuesta de la IA:** Revisó mis declaraciones y explicó cómo convertir las funciones en métodos con `self`. Cuando me perdí con el traslado, proporcionó el archivo completo y las instrucciones para adaptar `main.py`.
+* **Análisis Crítico:** Corregí el nombre de la clase y el del método `normalize_event`. Después apareció un `ImportError` porque `main.py` todavía importaba las funciones anteriores. La IA explicó que debía importar la clase y llamar a los métodos mediante un objeto.
+* **Solución Final Aplicada:** Integré `LogAnalyzer` con los métodos de normalización, deduplicación y métricas. Ejecuté el programa y comprobé que mantuviera 8 eventos únicos, 3 errores HTTP 500 y 37,5 %.
+
+## Registro de Prompt #18
+
+* **Fecha:** 2026-11-21
+* **Módulo/Función:** `src/services/geolocation.py`, `src/utils/report.py` y `main.py`.
+* **Prompt Enviado:** [Reconstruido] “Guíame para convertir la consulta geográfica y la escritura del reporte en clases. Revisemos mis intentos.”
+* **Respuesta de la IA:** Orientó la creación de `GeolocationClient` y `JSONReportWriter`, revisó mis fragmentos y explicó las correcciones necesarias para integrarlos.
+* **Análisis Crítico:** Corregí una declaración con `def` que debía utilizar `class`. En el escritor, mi intento entregaba una ruta a `json.dump` y llamaba a `unlink`, que eliminaría el archivo. La IA explicó cómo abrir el archivo con `with` y escribir sobre ese objeto.
+* **Solución Final Aplicada:** Implementé ambas clases, añadí la propiedad `output_path` y adapté `main.py`. Ejecuté el programa y comprobé la generación del reporte y las respuestas geográficas.
+
+## Registro de Prompt #19
+
+* **Fecha:** 2026-11-21
+* **Módulo/Función:** `src/services/metrics_application.py`, `src/models/log_event.py` y `main.py`.
+* **Prompt Enviado:** [Reconstruido] “Ayúdame a coordinar los componentes mediante una clase que reciba sus dependencias y a añadir una representación textual del evento.”
+* **Respuesta de la IA:** Explicó la inyección de dependencias por constructor, revisó mis intentos de `run()` y proporcionó fragmentos cuando pedí ayuda. También corrigió mi implementación de `__str__`.
+* **Análisis Crítico:** Corregí una llamada a `parse()` por `read()`, una llamada a un método inexistente y un conjunto donde necesitaba un diccionario. También distinguí entre definir una función y llamar a un método existente.
+* **Solución Final Aplicada:** `MetricsApplication` recibe lectores, analizador, cliente geográfico y escritor. Su método `run()` coordina el procesamiento y devuelve el reporte. Adapté `main.py`, añadí `LogEvent.__str__` y ejecuté el flujo completo con las métricas esperadas.
+
+## Registro de Prompt #20
+
+* **Fecha:** 2026-11-21
+* **Módulo/Función:** `docs/architecture.mmd` y `README.md`.
+* **Prompt Enviado:** [Reconstruido] “Conozco el UML dibujado en papel. Ayúdame a representar las clases del proyecto mediante Mermaid y documentar el Hito 2.”
+* **Respuesta de la IA:** Proporcionó el código Mermaid del diagrama y explicó las clases, los atributos, los métodos y las relaciones de herencia, dependencia y agregación. También sugirió actualizar el estado del proyecto en el README.
+* **Análisis Crítico:** Revisé la correspondencia del diagrama con las clases implementadas. Los componentes de `MetricsApplication` se representan mediante agregación porque se crean fuera de ella y se entregan por constructor. La visualización en GitHub queda pendiente de comprobar después de publicar.
+* **Solución Final Aplicada:** Guardé el diagrama en `docs/architecture.mmd`, añadí el bloque Mermaid al README y actualicé la descripción del avance del Hito 2.

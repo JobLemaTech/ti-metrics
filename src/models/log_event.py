@@ -61,3 +61,6 @@ class LogEvent:
             self.cpu_percent,
             self.memory_percent,
         )
+    
+    def __str__(self):
+        return f"{self.method} {self.path} - HTTP {self.status}"

@@ -87,6 +87,101 @@ Con los datos de ejemplo, el análisis produce 2 eventos válidos y únicos y 1 
 
 La geolocalización depende de una API externa y de una conexión a internet. La ubicación es aproximada; si la consulta falla, el reporte incluye el estado y el mensaje del error.
 
-## Alcance de esta entrega
+## Estado del proyecto
 
-Esta versión corresponde al Hito 1 de TI-Metrics e incluye la lectura de archivos CSV y JSON, la validación y deduplicación de eventos, el cálculo de métricas, la consulta de geolocalización y la generación del reporte JSON.
+### Hito 1
+
+Implementado con lectura de CSV y JSON, validación y deduplicación de eventos, cálculo de métricas HTTP 500, consulta de geolocalización y generación del reporte JSON.
+
+### Hito 2
+
+El procesamiento se reorganizó mediante clases:
+
+- `BaseLogParser`, `CSVLogParser` y `JSONLogParser` aplican abstracción, herencia y polimorfismo.
+- `LogEvent` representa los eventos y proporciona propiedades, una clave de deduplicación y una representación textual mediante `__str__`.
+- `LogAnalyzer` reúne la validación, la deduplicación y el cálculo de métricas.
+- `GeolocationClient` consulta la API.
+- `JSONReportWriter` guarda el reporte.
+- `MetricsApplication` recibe los componentes mediante su constructor y coordina el procesamiento.
+
+El diagrama UML se encuentra en `docs/architecture.mmd` y también se muestra en este README.
+
+## Diagrama de clases - Hito 2
+
+```mermaid
+classDiagram
+    class BaseLogParser {
+        <<abstract>>
+        #_path: Path
+        +__init__(path)
+        +path: Path
+        +read()* list
+    }
+
+    class CSVLogParser {
+        +read() list
+    }
+
+    class JSONLogParser {
+        +read() list
+    }
+
+    class LogEvent {
+        #_timestamp: str
+        #_ip: str
+        #_method: str
+        #_path: str
+        #_status: int
+        #_cpu_percent: float
+        #_memory_percent: float
+        +__init__(timestamp, ip, method, path, status, cpu_percent, memory_percent)
+        +timestamp: str
+        +ip: str
+        +method: str
+        +path: str
+        +status: int
+        +cpu_percent: float
+        +memory_percent: float
+        +is_http_500: bool
+        +to_dict() dict
+        +deduplication_key() tuple
+        +__str__() str
+    }
+
+    class LogAnalyzer {
+        +normalize_event(event) LogEvent
+        +deduplicate_events(events) list
+        +calculate_metrics(events) dict
+    }
+
+    class GeolocationClient {
+        +get_ip_geolocation(ip) dict
+        +enrich_ips(ips) dict
+    }
+
+    class JSONReportWriter {
+        #_output_path: Path
+        +__init__(output_path)
+        +output_path: Path
+        +write(report)
+    }
+
+    class MetricsApplication {
+        #_parsers: list
+        #_analyzer: LogAnalyzer
+        #_geolocation_client: GeolocationClient
+        #_report_writer: JSONReportWriter
+        +__init__(parsers, analyzer, geolocation_client, report_writer)
+        +run() dict
+    }
+
+    BaseLogParser <|-- CSVLogParser
+    BaseLogParser <|-- JSONLogParser
+
+    LogAnalyzer ..> LogEvent : crea y utiliza
+
+    MetricsApplication o-- "0..*" BaseLogParser : lectores
+    MetricsApplication o-- LogAnalyzer : analizador
+    MetricsApplication o-- GeolocationClient : cliente geografico
+    MetricsApplication o-- JSONReportWriter : escritor
+```
